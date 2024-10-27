@@ -1,69 +1,70 @@
-const canvas = document.getElementById('starfield');
-const ctx = canvas.getContext('2d');
+// starfield.js
+var canvas = document.getElementById('starfield');
+var context = canvas.getContext('2d');
 
-let width = canvas.width = window.innerWidth;
-let height = canvas.height = window.innerHeight;
-
-const stars = [];
-const numStars = 200;
-
-function Star() {
-    this.x = Math.random() * width;
-    this.y = Math.random() * height;
-    this.z = Math.random() * width;
-    this.size = 0.5;
-    this.speed = 0.05;
+// Set canvas size to window size
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 }
 
-Star.prototype.move = function() {
-    this.z -= this.speed;
-    if (this.z <= 0) {
-        this.z = width;
-    }
-};
+// Initial resize
+resizeCanvas();
 
-Star.prototype.draw = function() {
-    const x = (this.x - width / 2) * (width / this.z);
-    const y = (this.y - height / 2) * (width / this.z);
-    const s = this.size * (width / this.z);
+// Resize canvas when window is resized
+window.addEventListener('resize', resizeCanvas);
 
-    ctx.beginPath();
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-    ctx.arc(x + width / 2, y + height / 2, s, 0, 2 * Math.PI);
-    ctx.fill();
-};
+// Star properties
+var stars = [];
+var numStars = 200;
+var speed = 0.5;
 
-for (let i = 0; i < numStars; i++) {
-    stars.push(new Star());
-}
-
-function animate() {
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-    ctx.fillRect(0, 0, width, height);
-
-    stars.forEach(star => {
-        star.move();
-        star.draw();
+// Create stars
+for (var i = 0; i < numStars; i++) {
+    stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        z: Math.random() * 1000
     });
+}
 
+// Animation function
+function animate() {
+    context.fillStyle = 'rgba(0, 0, 0, 0.1)';
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    
+    context.fillStyle = 'white';
+    context.beginPath();
+    
+    for (var i = 0; i < numStars; i++) {
+        var star = stars[i];
+        
+        // Move star closer
+        star.z -= speed;
+        
+        // Reset star if it's too close
+        if (star.z <= 0) {
+            star.z = 1000;
+            star.x = Math.random() * canvas.width;
+            star.y = Math.random() * canvas.height;
+        }
+        
+        // Project star position
+        var k = 128.0 / star.z;
+        var px = star.x * k + canvas.width / 2;
+        var py = star.y * k + canvas.height / 2;
+        
+        // Draw star if it's in view
+        if (px >= 0 && px <= canvas.width && py >= 0 && py <= canvas.height) {
+            var size = (1 - star.z / 1000) * 3;
+            context.moveTo(px, py);
+            context.arc(px, py, size, 0, Math.PI * 2);
+        }
+    }
+    
+    context.fill();
     requestAnimationFrame(animate);
 }
 
+// Start animation
 animate();
-
-window.addEventListener('resize', function() {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
-});
-
-canvas.addEventListener('mousemove', function(e) {
-    const mouseX = e.clientX;
-    const mouseY = e.clientY;
-
-    stars.forEach(star => {
-        const dx = (mouseX - width / 2) / 100;
-        const dy = (mouseY - height / 2) / 100;
-        star.x += dx;
-        star.y += dy;
-    });
-});
