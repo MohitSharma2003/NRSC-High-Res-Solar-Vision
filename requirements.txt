@@ -2,8 +2,8 @@ numpy
 pandas
 plotly
 streamlit
-opencv-python-headless
-libgl1
+numpy==1.23.5
+opencv-python-headless==4.5.5.64
 ultralytics
 Pillow
 numpy
