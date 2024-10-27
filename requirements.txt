@@ -3,6 +3,7 @@ pandas
 plotly
 streamlit
 opencv-python-headless
+libgl1
 ultralytics
 Pillow
 numpy
