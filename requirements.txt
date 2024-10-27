@@ -1,7 +1,9 @@
-numpy==1.23.5
+numpy
 pandas
 plotly
 streamlit
+numpy==1.23.5
 opencv-python-headless==4.5.5.64
 ultralytics
 Pillow
+numpy
