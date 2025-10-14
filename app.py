@@ -357,7 +357,7 @@ def run_inference_page():
             st.error(f"An error occurred: {str(e)}")
             st.error("Please make sure the image is clear and contains solar panels.")
 
-    st.markdown('</ div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 def footer():
     st.markdown("""
@@ -405,9 +405,34 @@ def main():
     # Load custom CSS
     load_css()
 
-    # Sidebar navigation
+    # Sidebar navigation with full height and active button
+    st.sidebar.markdown("""
+        <style>
+        .sidebar .sidebar-content {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            justify-content: space-between;
+        }
+        .nav-button {
+            width: 100%;
+            padding: 8px 10px;
+            margin-bottom: 5px;
+            text-align: left;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .nav-button.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
     st.sidebar.markdown('<h1>Navigation</h1>', unsafe_allow_html=True)
-    
+
     # Navigation options
     pages = {
         "Welcome": welcome_page,
@@ -416,10 +441,15 @@ def main():
         "GitHub Repository": github_page
     }
 
-    # Create navigation buttons
-    for page, func in pages.items():
-        if st.sidebar.button(page, key=page):
-            st.session_state.page = page
+    # Sidebar buttons
+    for page_name in pages.keys():
+        if st.sidebar.button(page_name):
+            st.session_state.page = page_name
+
+    # Highlight active button (optional, visually)
+    for page_name in pages.keys():
+        active_class = "active" if st.session_state.page == page_name else ""
+        st.sidebar.markdown(f'<button class="nav-button {active_class}">{page_name}</button>', unsafe_allow_html=True)
 
     # Display the selected page
     if st.session_state.page in pages:
@@ -451,6 +481,7 @@ def main():
 
     # Add footer
     footer()
+
 
 if __name__ == "__main__":
     main()
