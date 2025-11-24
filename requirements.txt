@@ -1,15 +1,7 @@
-# 1. CRITICAL: The "Headless" version fixes the libGL/Service Unavailable error
 opencv-python-headless==4.10.0.84
-
-# 2. The YOLO Model
 ultralytics==8.3.21
-
-# 3. Your App Framework
-# Since you have 'streamlit' in your list, I assume you are using it.
 streamlit==1.39.0
-
-# 4. Optional: Only keep these if you use them explicitly in your code.
-# (If you don't import them directly, you can delete these lines, they are auto-installed by the above)
 numpy
-pandas
 pillow
+torch==2.5.0
+torchvision==0.20.0
