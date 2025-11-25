@@ -14,7 +14,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       build-essential \
       ca-certificates \
-      libgl1 \
+      libgl1-mesa-glx \
       libglib2.0-0 \
       libsm6 \
       libxext6 \
@@ -28,9 +28,9 @@ RUN python -m pip install --upgrade pip setuptools wheel && \
 # Copy application code
 COPY . .
 
-# Expose Streamlit port (8501 by default)
-ENV PORT=8501
-EXPOSE 8501
+# Use Cloud Run conventional port 8080
+ENV PORT=8080
+EXPOSE 8080
 
-# Run Streamlit
-CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+# Run Streamlit on 0.0.0.0 so Cloud Run can route traffic
+CMD ["streamlit", "run", "app.py", "--server.port=8080", "--server.address=0.0.0.0"]
